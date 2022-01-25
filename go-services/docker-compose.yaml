@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  gateway:
+    build: ./services/gateway
+    environment:
+      SERVICE_PRODUCTS_URL: http://products:8080/products
+      SERVICE_USERS_URL: http://users:8080/users
+    ports:
+      - "8080:8080"
+  products:
+    build: ./services/products
+    ports:
+      - "8081:8080"
+  users:
+    build: services/users
+    ports:
+      - "8082:8080"
