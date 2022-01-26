@@ -3,6 +3,8 @@ resource "google_cloud_run_service" "self" {
   name     = var.name
   project  = var.project_id
   location = var.region
+  autogenerate_revision_name = true
+
   template {
     spec {
       service_account_name = var.service_account_email
