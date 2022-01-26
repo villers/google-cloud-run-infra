@@ -7,10 +7,6 @@ variable "region" {
   type        = string
 }
 
-variable "shared_project_id" {
-  type = string
-}
-
 variable "cloudrun_connector_id" {
   type = string
 }

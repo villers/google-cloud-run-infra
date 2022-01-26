@@ -18,7 +18,6 @@ module "service_products" {
 
   project_id            = var.project_id
   region                = var.region
-  shared_project_id     = var.shared_project_id
   cloudrun_connector_id = module.network.google_vpc_access_connector_id
   service_name          = "products"
   image                 = "${data.docker_registry_image.self["products"].name}@${data.docker_registry_image.self["products"].sha256_digest}"
@@ -33,7 +32,6 @@ module "service_users" {
 
   project_id            = var.project_id
   region                = var.region
-  shared_project_id     = var.shared_project_id
   cloudrun_connector_id = module.network.google_vpc_access_connector_id
   service_name          = "users"
   image                 = "${data.docker_registry_image.self["users"].name}@${data.docker_registry_image.self["users"].sha256_digest}"
@@ -48,7 +46,6 @@ module "service_gateway" {
 
   project_id            = var.project_id
   region                = var.region
-  shared_project_id     = var.shared_project_id
   cloudrun_connector_id = module.network.google_vpc_access_connector_id
   service_name          = "gateway"
   image                 = "${data.docker_registry_image.self["gateway"].name}@${data.docker_registry_image.self["gateway"].sha256_digest}"

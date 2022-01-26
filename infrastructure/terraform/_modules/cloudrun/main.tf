@@ -49,7 +49,7 @@ resource "google_cloud_run_service" "self" {
   lifecycle {
     ignore_changes = [
       metadata.0.annotations["serving.knative.dev/lastModifier"],
-      metadata.0.annotations["serving.knative.dev/client-name"],
+      metadata.0.annotations["run.googleapis.com/client-name"],
     ]
   }
 }

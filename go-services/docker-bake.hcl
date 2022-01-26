@@ -9,7 +9,6 @@ group "default" {
 target "gateway" {
   context    = "services/gateway"
   dockerfile = "Dockerfile"
-  pull       = true
   tags       = [
     "europe-north1-docker.pkg.dev/ghota-cloud-run-shared/private/gateway:${TAG}"
   ]
