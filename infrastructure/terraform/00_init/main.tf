@@ -40,3 +40,30 @@ module "artifactregistry" {
     module.services_staging_prod,
   ]
 }
+
+#module "service_accounts" {
+#  source        = "terraform-google-modules/service-accounts/google"
+#  version       = "~> 4.1"
+#
+#  project_id    = var.shared_project_id
+#  names         = ["terraform-sa"]
+#  display_name  = "Terraform Service Account"
+#  description   = "Terraform service account for deployed resources"
+#  generate_keys = true
+#  project_roles = [
+#    "terraform-sa=>roles/admin",
+#  ]
+#}
+
+resource "google_service_account" "terraform" {
+  project      = var.shared_project_id
+  account_id   = "terraform-sa"
+  display_name = "Terraform Service Account"
+}
+
+resource "google_project_iam_member" "project" {
+  for_each = toset([var.shared_project_id, var.staging_project_id, var.production_project_id])
+  project  = each.value
+  role     = "roles/admin"
+  member   = "serviceAccount:${google_service_account.terraform.email}"
+}
