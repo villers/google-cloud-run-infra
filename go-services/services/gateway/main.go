@@ -2,14 +2,15 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
 	"os"
 )
 
-var serviceProductsUrl = "http://products/products"
-var serviceUsersUrl = "http://users/users"
+var serviceProductsUrl = "http://products"
+var serviceUsersUrl = "http://users"
 
 func main() {
 	if "" != os.Getenv("SERVICE_PRODUCTS_URL") {
@@ -39,19 +40,22 @@ func pingHandler(c *gin.Context) {
 
 func productsHandler(c *gin.Context) {
 	var payload json.RawMessage
-	err := callHttp(serviceProductsUrl, &payload)
+	url := fmt.Sprintf("%s/products", serviceProductsUrl)
+	err := callHttp(url, &payload)
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(200, payload)
-
 }
 
 func usersHandler(c *gin.Context) {
 	var payload json.RawMessage
-	err := callHttp(serviceUsersUrl, &payload)
+	url := fmt.Sprintf("%s/users", serviceUsersUrl)
+	err := callHttp(url, &payload)
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

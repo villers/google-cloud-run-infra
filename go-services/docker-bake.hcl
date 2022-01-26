@@ -7,26 +7,44 @@ group "default" {
 }
 
 target "gateway" {
-  context = "services/gateway"
+  context    = "services/gateway"
   dockerfile = "Dockerfile"
-  pull = true
-  tags = [
+  pull       = true
+  tags       = [
     "europe-north1-docker.pkg.dev/ghota-cloud-run-shared/private/gateway:${TAG}"
+  ]
+  cache-to   = [
+    "europe-north1-docker.pkg.dev/ghota-cloud-run-shared/private/gateway:cache"
+  ]
+  cache-from = [
+    "europe-north1-docker.pkg.dev/ghota-cloud-run-shared/private/gateway:cache"
   ]
 }
 
 target "products" {
-  context = "services/products"
+  context    = "services/products"
   dockerfile = "Dockerfile"
-  tags = [
+  tags       = [
     "europe-north1-docker.pkg.dev/ghota-cloud-run-shared/private/products:${TAG}"
+  ]
+  cache-to   = [
+    "europe-north1-docker.pkg.dev/ghota-cloud-run-shared/private/products:cache"
+  ]
+  cache-from = [
+    "europe-north1-docker.pkg.dev/ghota-cloud-run-shared/private/products:cache"
   ]
 }
 
 target "users" {
-  context = "services/users"
+  context    = "services/users"
   dockerfile = "Dockerfile"
-  tags = [
+  tags       = [
     "europe-north1-docker.pkg.dev/ghota-cloud-run-shared/private/users:${TAG}"
+  ]
+  cache-to   = [
+    "europe-north1-docker.pkg.dev/ghota-cloud-run-shared/private/users:cache"
+  ]
+  cache-from = [
+    "europe-north1-docker.pkg.dev/ghota-cloud-run-shared/private/users:cache"
   ]
 }
