@@ -1,8 +1,5 @@
 locals {
   cloudrun_net_range = "10.8.0.0/28"
-
-  firewall_nat_ip_ranges         = ["107.178.230.64/26", "35.199.224.0/19", ]
-  firewall_healthcheck_ip_ranges = ["130.211.0.0/22", "35.191.0.0/16", "108.170.220.0/23", ]
 }
 
 resource "google_compute_network" "self" {
