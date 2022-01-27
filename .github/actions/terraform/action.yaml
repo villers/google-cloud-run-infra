@@ -1,0 +1,77 @@
+name: "Terraform"
+description: "Run terraform plan and apply"
+inputs:
+  environment:
+    description: "The environment (default, staging, production) to run against"
+    required: true
+  terraform-version:
+    description: "The Terraform version to use (defaults to 1.1.4)"
+    required: false
+    default: "1.1.4"
+  github-token:
+    description: "The GitHub token to use for authentication"
+    required: true
+  working-directory:
+    description: "The working directory to run Terraform in"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: ${{ inputs.terraform-version }}
+    - name: Terraform Format
+      id: fmt
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: terraform fmt -check -recursive
+    - name: Terraform Init
+      id: init
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: terraform init -input=false
+    - name: Terraform Validate
+      id: validate
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: terraform validate -no-color
+    - name: Terraform Plan
+      id: plan
+      if: github.event_name == 'pull_request'
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: terraform plan -no-color -lock=false -var-file=vars/${{ inputs.environment }}.tfvars
+    - uses: actions/github-script@v5
+      if: github.event_name == 'pull_request'
+      env:
+        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+          #### Terraform Validation 🤖\`${{ steps.validate.outputs.stdout }}\`
+          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+          <details><summary>Show Plan ${{ inputs.environment }}</summary>
+          \`\`\`terraform
+          ${process.env.PLAN}
+          \`\`\`
+          </details>
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ inputs.working-directory }}\`, Workflow: \`${{ github.workflow }}\`*`;
+
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
+    - name: Terraform Plan Status
+      if: steps.plan.outcome == 'failure'
+      shell: bash
+      run: exit 1
+    - name: Terraform Apply
+      if: github.event_name != 'pull_request'
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: terraform apply -var-file=vars/${{ inputs.environment }}.tfvars -auto-approve

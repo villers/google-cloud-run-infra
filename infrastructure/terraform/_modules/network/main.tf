@@ -15,6 +15,12 @@ resource "google_compute_subnetwork" "cloudrun" {
   region                   = var.region
   network                  = google_compute_network.self.id
   private_ip_google_access = true
+
+  log_config {
+    aggregation_interval = "INTERVAL_10_MIN"
+    flow_sampling        = 0.1
+    metadata             = "INCLUDE_ALL_METADATA"
+  }
 }
 
 resource "google_vpc_access_connector" "cloudrun" {

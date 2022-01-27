@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-  pull_request:
+  workflow_dispatch:
 env:
   GOOGLE_REGION: europe-north1
   TERRAFORM_VERSION: 1.1.4
@@ -31,10 +31,7 @@ jobs:
     environment: staging
     env:
       TF_WORKSPACE: staging
-    defaults:
-      run:
-        shell: bash
-        working-directory: infrastructure/terraform/10_shared
+      WORKING-DIRECTORY: infrastructure/terraform/10_shared
     steps:
       - uses: actions/checkout@v2
       - uses: 'google-github-actions/auth@v0'
@@ -43,17 +40,13 @@ jobs:
       - uses: 'google-github-actions/setup-gcloud@v0'
       - name: Configure Docker
         run: gcloud auth configure-docker ${{env.GOOGLE_REGION}}-docker.pkg.dev --quiet
-      - uses: hashicorp/setup-terraform@v1
+      - uses: ./.github/actions/terraform
         with:
-          terraform_version: ${{env.TERRAFORM_VERSION}}
-      - name: Terraform Format
-        run: terraform fmt -check
-      - name: Terraform Init
-        run: terraform init
-      - name: Terraform Validate
-        run: terraform validate -no-color
-      - name: Terraform Apply
-        run: terraform apply --var-file=vars/${{env.TF_WORKSPACE}}.tfvars -auto-approve
+          environment: ${{ env.TF_WORKSPACE }}
+          terraform-version: ${{ env.TERRAFORM_VERSION }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          working-directory: ${{ env.WORKING-DIRECTORY }}
+
   deploy-production:
     name: Deployment to production
     runs-on: ubuntu-latest
@@ -61,10 +54,7 @@ jobs:
     environment: production
     env:
       TF_WORKSPACE: production
-    defaults:
-      run:
-        shell: bash
-        working-directory: infrastructure/terraform/10_shared
+      WORKING-DIRECTORY: infrastructure/terraform/10_shared
     steps:
       - uses: actions/checkout@v2
       - uses: 'google-github-actions/auth@v0'
@@ -73,14 +63,8 @@ jobs:
       - uses: 'google-github-actions/setup-gcloud@v0'
       - name: Configure Docker
         run: gcloud auth configure-docker ${{env.GOOGLE_REGION}}-docker.pkg.dev --quiet
-      - uses: hashicorp/setup-terraform@v1
+      - uses: ./.github/actions/terraform
         with:
-            terraform_version: ${{env.TERRAFORM_VERSION}}
-      - name: Terraform Format
-        run: terraform fmt -check
-      - name: Terraform Init
-        run: terraform init
-      - name: Terraform Validate
-        run: terraform validate -no-color
-      - name: Terraform Apply
-        run: terraform apply --var-file=vars/${{env.TF_WORKSPACE}}.tfvars -auto-approve
+          environment: ${{ env.TF_WORKSPACE }}
+          terraform-version: ${{ env.TERRAFORM_VERSION }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
