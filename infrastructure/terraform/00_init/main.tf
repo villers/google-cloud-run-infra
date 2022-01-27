@@ -41,20 +41,6 @@ module "artifactregistry" {
   ]
 }
 
-#module "service_accounts" {
-#  source        = "terraform-google-modules/service-accounts/google"
-#  version       = "~> 4.1"
-#
-#  project_id    = var.shared_project_id
-#  names         = ["terraform-sa"]
-#  display_name  = "Terraform Service Account"
-#  description   = "Terraform service account for deployed resources"
-#  generate_keys = true
-#  project_roles = [
-#    "terraform-sa=>roles/admin",
-#  ]
-#}
-
 resource "google_service_account" "terraform" {
   project      = var.shared_project_id
   account_id   = "terraform-sa"
