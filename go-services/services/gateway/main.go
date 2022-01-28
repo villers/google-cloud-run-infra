@@ -22,8 +22,18 @@ func main() {
 
 	r := gin.Default()
 	r.GET("/ping", pingHandler)
-	r.GET("/products", productsHandler)
-	r.GET("/users", usersHandler)
+
+	products := r.Group("/products")
+	{
+		products.GET("/", productsHandler)
+		products.GET("/ping", pingRemoteHandler(serviceProductsUrl))
+	}
+
+	users := r.Group("/users")
+	{
+		users.GET("/", usersHandler)
+		users.GET("/ping", pingRemoteHandler(serviceUsersUrl))
+	}
 
 	err := r.Run()
 	if err != nil {
@@ -36,6 +46,20 @@ func pingHandler(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "pong",
 	})
+}
+
+func pingRemoteHandler(url string) func(c *gin.Context) {
+	return func(c *gin.Context) {
+		var payload json.RawMessage
+		url := fmt.Sprintf("%s/ping", url)
+		err := callHttp(url, &payload)
+		if err != nil {
+			fmt.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(200, payload)
+	}
 }
 
 func productsHandler(c *gin.Context) {

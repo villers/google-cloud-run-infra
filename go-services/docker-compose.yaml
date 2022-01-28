@@ -3,8 +3,8 @@ services:
   gateway:
     build: ./services/gateway
     environment:
-      SERVICE_PRODUCTS_URL: http://products:8080/products
-      SERVICE_USERS_URL: http://users:8080/users
+      SERVICE_PRODUCTS_URL: http://products:8080
+      SERVICE_USERS_URL: http://users:8080
     ports:
       - "8080:8080"
   products:

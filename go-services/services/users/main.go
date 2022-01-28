@@ -23,6 +23,7 @@ func main() {
 
 func pingHandler(c *gin.Context) {
 	c.JSON(200, gin.H{
+		"name":    "users",
 		"message": "pong",
 	})
 }
