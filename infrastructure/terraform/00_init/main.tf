@@ -25,6 +25,7 @@ module "services_staging_prod" {
     "run.googleapis.com",
     "compute.googleapis.com",
     "vpcaccess.googleapis.com",
+    "dns.googleapis.com",
   ]
 }
 
