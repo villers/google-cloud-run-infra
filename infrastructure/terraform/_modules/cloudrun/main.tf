@@ -1,8 +1,8 @@
 resource "google_cloud_run_service" "self" {
-  provider = google-beta
-  name     = var.name
-  project  = var.project_id
-  location = var.region
+  provider                   = google-beta
+  name                       = var.name
+  project                    = var.project_id
+  location                   = var.region
   autogenerate_revision_name = true
 
   template {
