@@ -26,6 +26,9 @@ module "services_staging_prod" {
     "compute.googleapis.com",
     "vpcaccess.googleapis.com",
     "dns.googleapis.com",
+    "apigateway.googleapis.com",
+    "servicemanagement.googleapis.com",
+    "servicecontrol.googleapis.com",
   ]
 }
 
