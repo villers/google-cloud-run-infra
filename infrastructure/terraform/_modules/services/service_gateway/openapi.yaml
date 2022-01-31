@@ -1,0 +1,83 @@
+swagger: '2.0'
+info:
+  title: api gateway cloudrun
+  description: It allows you to secure a cloud run API without having to declare a load balancer which is expensive
+  version: 1.0.0
+schemes:
+  - https
+produces:
+  - application/json
+x-google-backend:
+  address: ${address}
+paths:
+  /**:
+    get:
+      summary: all GET request to api gateway cloudrun
+      operationId: get
+      x-google-quota:
+        metricCosts:
+          "read-requests": 1
+      responses:
+        '200':
+          description: A successful response
+    post:
+      summary: all requests to api gateway cloudrun
+      operationId: post
+      x-google-quota:
+        metricCosts:
+          "read-requests": 1
+      responses:
+        '200':
+          description: A successful response
+    put:
+      summary: all requests to api gateway cloudrun
+      operationId: put
+      x-google-quota:
+        metricCosts:
+          "read-requests": 1
+      responses:
+        '200':
+          description: A successful response
+    patch:
+      summary: all requests to api gateway cloudrun
+      operationId: patch
+      x-google-quota:
+        metricCosts:
+          "read-requests": 1
+      responses:
+        '200':
+          description: A successful response
+    delete:
+      summary: all requests to api gateway cloudrun
+      operationId: delete
+      x-google-quota:
+        metricCosts:
+          "read-requests": 1
+      responses:
+        '200':
+          description: A successful response
+    options:
+      summary: all requests to api gateway cloudrun
+      operationId: options
+      x-google-quota:
+        metricCosts:
+          "read-requests": 1
+      responses:
+        '200':
+          description: A successful response
+
+x-google-management:
+  metrics:
+    # Define a metric for read requests.
+    - name: "read-requests"
+      displayName: "Read requests"
+      valueType: INT64
+      metricKind: DELTA
+  quota:
+    limits:
+      # Define the limit or the read-requests metric.
+      - name: "read-limit"
+        metric: "read-requests"
+        unit: "1/min/{project}"
+        values:
+          STANDARD: 1000

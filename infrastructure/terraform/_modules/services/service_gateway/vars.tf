@@ -22,6 +22,7 @@ variable "image" {
 variable "service_products_url" {
   type = string
 }
+
 variable "service_users_url" {
   type = string
 }
